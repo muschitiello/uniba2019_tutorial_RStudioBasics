@@ -1,0 +1,24 @@
+---
+title: "Mixed Notebook"
+output: html_notebook
+---
+<div style="width:400px;">
+![](images/icons3.png)
+</div>
+```{r setup}
+library(reticulate)
+```
+
+## Python
+
+```{python python_code}
+python_string = "hello, python world"
+print(python_string.split(" "))
+```
+
+
+## R
+
+```{r r_code}
+print(paste0(py$python_string, " from R!"))
+```

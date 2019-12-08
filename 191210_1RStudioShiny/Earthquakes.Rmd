@@ -1,0 +1,60 @@
+---
+title: "Earthquakes"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+  runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(geonames)
+library(magrittr)
+library(flexdashboard)
+library(leaflet)
+library(data.table)
+
+theme_set(theme_minimal())
+options(geonamesUsername="rstudio_dashboard") 
+
+latest_earthquakes <- GNearthquakes(north=90,south=-90,west=-180,east=180,date=Sys.Date(), maxRows = 50)
+latest_earthquakes <- latest_earthquakes %>% 
+    mutate(magnitude = round(as.numeric(as.character(magnitude)),1),
+         lat = round(as.numeric(as.character(lat)), 3),
+         lng = round(as.numeric(as.character(lng)), 3))
+
+latest_earthquakes <- as.data.table(latest_earthquakes)
+
+latest_earthquakes <- latest_earthquakes[,mget(c("datetime","depth","magnitude","lng","lat"))]
+```
+
+# Earthquakes
+
+### Map
+```{r temp_map, echo=FALSE}
+
+leaflet(width = 300, height =300) %>% 
+  addTiles()  %>% 
+  setView(40, 15, zoom = 2) %>% 
+  addCircleMarkers(data = latest_earthquakes,
+            radius = ~ magnitude*2, stroke = FALSE, 
+            fillColor = "#80532F", fillOpacity = 0.5,
+            group = "Earthquakes", 
+            popup = ~ paste0(datetime, " UTC<br \\>Earthquake Magnitude ", magnitude))
+```
+
+### Earthquake List
+
+```{r earthquake_table}
+
+### $$$ change the variable filtered_movies to the reactive expression reactive_movies()
+DT::renderDataTable({
+  DT::datatable(data = latest_earthquakes,
+                    options = list(pageLength = 5, rownames = FALSE) 
+                    ) 
+  })
+```

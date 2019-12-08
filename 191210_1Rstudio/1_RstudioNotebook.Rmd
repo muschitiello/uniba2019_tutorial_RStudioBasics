@@ -1,0 +1,132 @@
+---
+title: "R Notebook - RStudio"
+output: html_notebook
+---
+<div style="width:400px;">
+![](images/icons3.png)
+</div>
+___
+
+Tutorial Base per l'utilizzo di RStudio
+
+### **Indice**
+
+ - Scaricare/importare dati in RStudio
+ - Esplorare e trasformare i dati
+ - Analisi statistica base
+ - Grafici
+
+___
+
+
+## **Scaricare/importare dati in RStudio**
+
+Importeremo 2 dataset: 
+
+ - *ACS*: American Community Survey. Dataset con informazioni sulla popolazione americana, quali età di marito e moglie, numero di figli, lingua eccetera
+ - *Titanic*: Alcuni dati relativi ai passeggeri del Titanic: classe, sopravvivenza, sesso, eccetera
+
+
+### *Da linea di comando*
+
+```{r}
+acs <- read.csv(url("http://stat511.cwick.co.nz/homeworks/acs_or.csv"))
+```
+
+Qeusto comando non prodice alcun output, ma possiamo vedere l'oggetto `acs` nel `Global Environment`
+
+### *Dal computer*
+
+Un secondo modo è quello di scaricare il dataset sul computer e poi usare l'*import dataset* di RStudio, nel pannello *"Environment"*. 
+
+Questo porta al segente pannello, dove è possibile impostare i parametri di importazione. 
+
+<div style="width:500px;">
+![](images/importDS.png)
+</div>
+
+Importiamo anche il dataset Titanic:
+
+```{r}
+titanic <- read.csv("data/titanic.csv")
+```
+
+## **Esplorare e trasformare i dati**
+
+Tutti i dataset si possono vedere in RStudio con il comando `View(nome_dataset)`
+
+```{r}
+View(titanic)
+```
+
+<div style="width:500px;">
+![](images/viewTit.png)
+</div>
+
+E' possibile esplorare la struttura del dataset, oppure effettuare trasformazioni:
+
+Struttura del dataset acs:
+```{r}
+str(acs)
+```
+
+Struttura del dataset titanic:
+```{r}
+str(titanic)
+summary(titanic)
+```
+
+Tabella di frequenza relativa alla classe dei passeggeri del titanic:
+```{r}
+table(titanic$Pclass)
+```
+
+Tabella di frequenza relativa alle lingue parlate dai rispondenti all'acs:
+```{r}
+table(acs$language)
+```
+
+## *Analisi statistica base*
+
+Media
+```{r}
+mean(acs$age_husband)
+```
+
+Mediana
+```{r}
+median(acs$age_husband)
+```
+Quartili
+```{r}
+quantile(acs$age_wife)
+```
+Varianza
+```{r}
+var(acs$age_wife)
+```
+Deviazione Standard
+```{r}
+sd(acs$age_wife)
+```
+
+## Grafici
+
+scatterplot
+```{r}
+plot(x = acs$age_husband , y = acs$age_wife, type = 'p')
+```
+
+Istogramma
+```{r}
+  hist(acs$number_children)
+```
+Barplot
+```{r}
+counts <- table(acs$bedrooms)
+  barplot(counts, main="Bedrooms Distribution",  xlab="Number of Bedrooms")
+```
+
+<div style="width:500px;">
+![](images/great.png)
+</div>
